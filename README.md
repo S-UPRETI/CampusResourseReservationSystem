@@ -1,3 +1,3 @@
-# CampusResourseReservationSystem
+# CampusResourceReservationSystem
 
 Frank in the house
