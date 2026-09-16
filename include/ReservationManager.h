@@ -10,7 +10,7 @@ private:
         Reservation reservation;
         Node* next;
 
-        Node();
+        Node(const Reservation& reservation, Node* next);
     };
 
     Node* head;
@@ -29,7 +29,7 @@ public:
 
     bool ReservationExists(int ReservationID) const;
 
-    bool ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate) const;
+    bool ValidateReservation(int ReservationID, std::string StudentName, int StudentID, std::string ResourceID, std::string ReservationDate) const;
 
 };
 
