@@ -31,6 +31,7 @@ void WaitingList::addToWaitlist(Reservation r) {
         rear = newNode;
     }
     count++;
+}
 
 Reservation WaitingList::removeFromWaitlist() {
     if (isEmpty()) {
@@ -40,37 +41,26 @@ Reservation WaitingList::removeFromWaitlist() {
 
     Node* temp = front;
     Reservation next = temp->data;
-    front = front->next;   // move front forward to the next-longest-waiting student
-
+    front = front->next;   
     if (front == nullptr) {
        
         rear = nullptr;
-    }
-
-    delete temp;
+    } delete temp;
     count--;
 
-    return next;
-
-  
+    return next; 
 }
-
 bool WaitingList::isEmpty() const {
-    return front == nullptr;   // O(1)
-}
+    return front == nullptr;  
 
 int WaitingList::getCount() const {
-    return count;   // O(1): stored value, not recalculated by traversal
-}
+    return count;  
 
 void WaitingList::displayWaitlist() const {
     if (isEmpty()) {
         cout << "Waiting list is empty." << endl;
         return;
     }
-
-    // Must visit every node once, front to back - O(n),
-    // unlike add/remove which are O(1).
     Node* current = front;
     cout << "--- Waiting List (front to back) ---" << endl;
     while (current != nullptr) {
