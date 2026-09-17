@@ -4,9 +4,6 @@
 #define WAITINGLIST_H
 #include "Reservation.h"
 
-// QUEUE (FIFO - First In, First Out), implemented as a singly linked list.
-// Used to manage students waiting for a resource that is currently unavailable.
-// Kept separate from the active reservations linked list and the cancellation stack.
 class WaitingList {
 private:
     // A single node in the linked queue.
