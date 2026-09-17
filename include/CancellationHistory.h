@@ -9,11 +9,9 @@ private:
 		Reservation data;
 		Node* next;
 
-		Node(Reservation r) : data(r), next(nullptr) {} // This is the Node's constructor: when you create a Node and pass it a Reservation (r),
-        // it automatically stores that reservation in "data" and sets "next" to nullptr
-
+		Node(Reservation r) : data(r), next(nullptr) {} 
 	};
-	Node* top;// Pointer to the Node currently on top of the stack (the most recently cancelled reservation)
+	Node* top;
 	int count;
 
 public:
@@ -29,4 +27,4 @@ public:
 	void displayHistory() const;
 
 };
-#endif//CancellationHistory header placeholder- samie
+#endif
