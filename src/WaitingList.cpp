@@ -51,10 +51,10 @@ Reservation WaitingList::removeFromWaitlist() {
     return next; 
 }
 bool WaitingList::isEmpty() const {
-    return front == nullptr;  
+    return front == nullptr; } 
 
 int WaitingList::getCount() const {
-    return count;  
+    return count;  }
 
 void WaitingList::displayWaitlist() const {
     if (isEmpty()) {
