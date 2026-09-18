@@ -8,23 +8,22 @@ private:
 	struct Node {
 		Reservation data;
 		Node* next;
-
-		Node(Reservation r) : data(r), next(nullptr) {} 
+// to store a reservation and connect it to the next node
+	Node(Reservation r, Node* nextNode) : data(r), next(nextNode) {} 
 	};
 	Node* top;
 	int count;
 
 public:
 	CancellationHistory();
-	~CancellationHistory(); //Destructor declaration
+	~CancellationHistory(); 
+// function for adding restoring checking displaying cancellation 
+void pushCancellation(Reservation r);
 
-	void pushCancellation(Reservation r);
+Reservation popAndRestore();
 
-	Reservation popAndRestore();
-
-	bool isEmpty() const;
-	int getCount() const;
-	void displayHistory() const;
-
+bool isEmpty() const;
+int getCount() const;
+void displayHistory() const;
 };
 #endif
