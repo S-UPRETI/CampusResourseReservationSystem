@@ -1,10 +1,8 @@
 #include "ReservationManager.h"
 #include <iostream>
+using namespace std;
 
 ReservationManager::Node::Node(const Reservation& reservation, Node* next):reservation(reservation), next (next){
-    this->reservation=reservation;
-    this->next=next;
-
 
 }
 
@@ -90,10 +88,18 @@ bool ReservationManager::RemoveReservation(int ReservationID){
 }
 
 
-bool ReservationManager::ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate) const{
+bool ReservationManager::ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager) const{
     if(ReservationExists(ReservationID)){
         cout<<"Reservation ID invalid, reservation already exists"<<endl;
         return false;
     }
 
+    Resource* resource = resourceManager.findResource (ResourceID);
+
+    if (resource==nullptr){
+        return false;
+
+    };
+
+    return true;
 }
