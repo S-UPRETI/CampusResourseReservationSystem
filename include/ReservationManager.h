@@ -2,6 +2,7 @@
 #define RESERVATIONMANAGER_H
 #include <string>
 #include "Reservation.h"
+#include "ResourceManager.h"
 
 class ReservationManager{
 private:
@@ -10,7 +11,7 @@ private:
         Reservation reservation;
         Node* next;
 
-        Node();
+        Node(const Reservation& reservation, Node* next);
     };
 
     Node* head;
@@ -29,7 +30,7 @@ public:
 
     bool ReservationExists(int ReservationID) const;
 
-    bool ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate) const;
+    bool ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager ) const;
 
 };
 
