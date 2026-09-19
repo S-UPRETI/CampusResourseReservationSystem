@@ -71,23 +71,52 @@ int main(){
         switch(choice){
 
             case 1:// Display all resources
-                
+                resourceManager.displayAll();
                 break;
 
             case 2://Display available resources
-                
+                resourceManager.displayAvailable();
                 break;
             
             case 3://create reservation
+            {
+            int ReservationID;
+            int StudentID;
+            string StudentName;
+            string ResourceID;
+            string ReservationDate;
+
+            ReservationID= readInt("What is the Reservation ID? ");
+            StudentID= readInt("What is the Student ID? ");
+            StudentName= readText("What is the Student Name? ");
+            ResourceID= readText("What is the Resource ID? ");
+            ReservationDate= readText("What is the Reservation Date? ");
+
+            if(!reservationManager.ValidateReservation(ReservationID,StudentName,StudentID,ResourceID,ReservationDate,resourceManager)){
+                cout<<"Invalid Reservation ID or Resource ID"<<endl;
+            }
+            else{
+                Reservation reservation(ReservationID,StudentID,StudentName,ResourceID, ReservationDate);
+                Resource* resource= resourceManager.findResource(ResourceID);
+                if(resource->isAvailable()){
+                    reservationManager.InsertReservation(reservation);
+                    resourceManager.setResourceAvailability(ResourceID,false);
+                }
+                else{       
+                    waitingList.addToWaitlist(reservation);
+                }
+
+            }
 
                 break;
+            }
 
             case 4://cancel reservation
 
                 break;
 
             case 5://display active reservations
-
+            reservationManager.DisplayReservations();
                 break;
 
             case 6://display waiting list
