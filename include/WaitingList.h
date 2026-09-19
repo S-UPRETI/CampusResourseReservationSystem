@@ -30,6 +30,8 @@ public:
     int getCount() const;
 
     void displayWaitlist() const;
+
+    Reservation peek() const;
 };
 
 #endif
