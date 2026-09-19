@@ -1,0 +1,41 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Build Campus Resource Reservation System",
+            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-I",
+                "${workspaceFolder}\\include",
+
+                "${workspaceFolder}\\src\\main.cpp",
+                "${workspaceFolder}\\src\\Resource.cpp",
+                "${workspaceFolder}\\src\\ResourceManager.cpp",
+                "${workspaceFolder}\\src\\Reservation.cpp",
+                "${workspaceFolder}\\src\\ReservationManager.cpp",
+                "${workspaceFolder}\\src\\WaitingList.cpp",
+                "${workspaceFolder}\\src\\CancellationHistory.cpp",
+
+                "-o",
+                "${workspaceFolder}\\main.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Build the complete Campus Resource Reservation System."
+        }
+    ],
+    "version": "2.0.0"
+}
