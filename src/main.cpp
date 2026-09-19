@@ -6,6 +6,33 @@
 #include <string>
 
 using namespace std;
+// Asks the user to type some textand keeps asking if they leave it blank
+string readText(const string& prompt) {
+    string value;
+  while (true) {
+      cout << prompt;
+    getline(cin, value);
+     if (!value.empty()) {
+            return value;
+        }
+cout << "This field cannot be empty.\n";
+    }
+}
+
+// Asks the user to type a number and keeps asking if they type something wrong
+int readInt(const string& prompt) {
+  int value;
+ while (true) {
+  cout << prompt;
+     if (cin >> value) {
+      cin.ignore(); // clears leftover Enter key press
+      return value;
+        }
+     cout << "Please enter a valid number.\n";
+      cin.clear();
+     cin.ignore(10000, '\n');
+    }
+}
 
 int main(){
 
