@@ -66,6 +66,7 @@ int main(){
         
         cout<<" Enter your choice: ";
         cin>>choice;
+        cin.ignore();
 
         switch(choice){
 
@@ -90,23 +91,34 @@ int main(){
                 break;
 
             case 6://display waiting list
-
+ waitingList.displayWaitlist();
                 break;
 
             case 7://display cancellation history
-
+ cancellationHistory.displayHistory();
                 break;
 
             case 8://undo last cancellation
+{
+    if (cancellationHistory.isEmpty()) {
+        cout << "There is no cancellations to undo." << endl;
+    } else {
+        Reservation restored = cancellationHistory.popAndRestore();
+        cout << "Restored: ";
+        restored.display();
 
+        reservationManager.InsertReservation(restored);
+        resourceManager.setResourceAvailability(restored.GetResource_ID(), false);
+    }
                 break;
+}
 
             case 9://exit
                 cout<<"Exiting program..." << endl;
                 break;
 
             default:// invalid choice
-            
+             cout << "Invalid choice. Please select 1-9." << endl;
                 break;
 
 
