@@ -68,3 +68,10 @@ void WaitingList::displayWaitlist() const {
         current = current->next;
     }
 }
+
+Reservation WaitingList::peek() const {
+    if (isEmpty()) {
+        throw runtime_error("Waiting list is empty.");
+    }
+    return front->data;
+}
