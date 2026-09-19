@@ -24,7 +24,7 @@ public:
 
     void InsertReservation(Reservation);
 
-    bool RemoveReservation(int ReservationID);
+    bool RemoveReservation(int ReservationID, Reservation& RemovedReservation);
 
     void DisplayReservations() const;
 

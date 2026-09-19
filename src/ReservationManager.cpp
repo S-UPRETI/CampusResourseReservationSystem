@@ -57,7 +57,7 @@ void ReservationManager::DisplayReservations() const{
 
 }
 
-bool ReservationManager::RemoveReservation(int ReservationID){
+bool ReservationManager::RemoveReservation(int ReservationID, Reservation& RemovedReservation){
     Node* current= head;
     Node* prev= nullptr;
 
@@ -73,11 +73,13 @@ bool ReservationManager::RemoveReservation(int ReservationID){
         }
         else{
             if(head==current){
+                RemovedReservation= current->reservation;
                 head=current->next;
                 delete current;
                 return true;
             }
             else{
+                RemovedReservation= current->reservation;
                 prev->next=current->next;
                 delete current;
                 return true;
