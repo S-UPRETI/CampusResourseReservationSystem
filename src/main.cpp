@@ -111,9 +111,33 @@ int main(){
                 break;
             }
 
-            case 4://cancel reservation
+            case 4: // cancel reservation
+                {
+                    int cancelID = readInt("What is the Reservation ID to cancel? ");
+                    Reservation removed(0, 0, "", "", ""); 
 
-                break;
+                    if (!reservationManager.RemoveReservation(cancelID, removed)) {
+                        cout << "No reservation found with that ID." << endl;
+                    } else {
+                        cancellationHistory.pushCancellation(removed);
+                        resourceManager.setResourceAvailability(removed.GetResource_ID(), true);
+                        cout << "Cancelled: ";
+                        removed.display();
+
+                        // If someone's waiting for this resource, pull them off the queue
+                        if (!waitingList.isEmpty()) {
+                            Reservation next = waitingList.peek();
+                            if (next.GetResource_ID() == removed.GetResource_ID()) {
+                                waitingList.removeFromWaitlist();
+                                reservationManager.InsertReservation(next);
+                                resourceManager.setResourceAvailability(next.GetResource_ID(), false);
+                                cout << "Moved from waiting list into reservation: ";
+                                next.display();
+                            }
+                        }
+                    }
+                   break;
+                }
 
             case 5://display active reservations
             reservationManager.DisplayReservations();
