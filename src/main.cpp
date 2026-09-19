@@ -119,7 +119,7 @@ int main(){
             ReservationID=readInt("Enter the Reservation ID of the reservation you would like to cancel: ");
 
             if(!reservationManager.RemoveReservation(ReservationID,removedReservation)){
-                cout<<"Reservation removal was unsuccessful, reservation ID does not exist"<<endl;
+                cout<<"Reservation cancellation was unsuccessful, reservation ID does not exist"<<endl;
             }
             else{
 
