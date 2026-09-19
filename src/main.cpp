@@ -64,9 +64,8 @@ int main(){
         cout<<"8. Undo last cancellation"<< endl;
         cout<<"9. Exit"<< endl;
         
-        cout<<" Enter your choice: ";
-        cin>>choice;
-        cin.ignore();
+        choice=readInt("Enter your choice");
+       
 
         switch(choice){
 
