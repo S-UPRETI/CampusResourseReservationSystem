@@ -2,6 +2,17 @@
 #include <iostream>
 using namespace std;
 
+
+Reservation::Reservation(){
+    ReservationID= 0;
+    StudentID= 0;
+    StudentName= "";
+    ResourceID= "";
+    ReservationDate= "";
+
+
+}
+
 Reservation::Reservation(int Reservation_ID, int Student_ID, string Student_Name, string Resource_ID, string Reservation_Date){
     ReservationID= Reservation_ID;
     StudentID= Student_ID;

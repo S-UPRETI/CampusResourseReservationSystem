@@ -12,6 +12,8 @@ private:
     string ReservationDate;
 
 public:
+    
+    Reservation();
     Reservation(int Reservation_ID, int Student_ID, string Student_Name, string Resource_ID, string Reservation_Date);
 
     int GetReservation_ID() const;

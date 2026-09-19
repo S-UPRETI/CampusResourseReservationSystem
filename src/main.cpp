@@ -112,8 +112,33 @@ int main(){
             }
 
             case 4://cancel reservation
+        {
+            int ReservationID;
+            Reservation removedReservation;
 
-                break;
+            ReservationID=readInt("Enter the Reservation ID of the reservation you would like to cancel: ");
+
+            if(!reservationManager.RemoveReservation(ReservationID,removedReservation)){
+                cout<<"Reservation removal was unsuccessful, reservation ID does not exist"<<endl;
+            }
+            else{
+
+                cancellationHistory.pushCancellation(removedReservation);
+                resourceManager.setResourceAvailability(removedReservation.GetResource_ID(),true);
+
+                if(!waitingList.isEmpty()){
+                    Reservation frontReservation=waitingList.peek();
+                    if (frontReservation.GetResource_ID()==removedReservation.GetResource_ID()){
+                        Reservation boostedReservation=waitingList.removeFromWaitlist();
+                        reservationManager.InsertReservation(boostedReservation);
+                        resourceManager.setResourceAvailability(boostedReservation.GetResource_ID(),false);
+                    }
+                }
+            }
+            break;
+        }
+
+                
 
             case 5://display active reservations
             reservationManager.DisplayReservations();
