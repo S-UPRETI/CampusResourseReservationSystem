@@ -157,13 +157,21 @@ int main(){
         cout << "There is no cancellations to undo." << endl;
     } else {
         Reservation restored = cancellationHistory.popAndRestore();
-        cout << "Restored: ";
-        restored.display();
+        Resource* resource = resourceManager.findResource(restored.GetResource_ID());
+
+        if (resource != nullptr && resource->isAvailable()) {
 
         reservationManager.InsertReservation(restored);
         resourceManager.setResourceAvailability(restored.GetResource_ID(), false);
+        cout << "Restored to active reservations: ";
+            restored.display();
+    } else {
+            waitingList.addToWaitlist(restored);
+            cout << "resource no longer available. Restored reservation placed back in the waiting list: ";
+            restored.display();
+        }
     }
-                break;
+     break;
 }
 
             case 9://exit
