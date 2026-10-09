@@ -22,7 +22,7 @@ public:
 
     ~ReservationManager();
 
-    void InsertReservation(Reservation);
+    bool InsertReservation(Reservation reservation);
 
     bool RemoveReservation(int ReservationID, Reservation& RemovedReservation);
 
@@ -32,6 +32,9 @@ public:
 
     bool ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager ) const;
 
+    const Reservation* SearchReservation(int ResrvationID) const;
+
+    int CountReservationsforResource(const string& ResourceID) const;
 };
 
 #endif

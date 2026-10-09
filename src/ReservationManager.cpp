@@ -22,14 +22,15 @@ ReservationManager::~ReservationManager(){
 
 }
 
-void ReservationManager::InsertReservation(Reservation reservation){
+bool ReservationManager::InsertReservation(Reservation reservation){
     if(ReservationExists(reservation.GetReservation_ID())){
         cout<<"Reservation ID already exists"<<endl;
-        return;
+        return false;
     }
 
     Node* newNode= new Node(reservation, head);
     head= newNode;
+    return true;
 
 
 }
@@ -99,9 +100,41 @@ bool ReservationManager::ValidateReservation(int ReservationID, string StudentNa
     Resource* resource = resourceManager.findResource (ResourceID);
 
     if (resource==nullptr){
+        cout<<"Resource ID does not exist"<<endl;
         return false;
 
-    };
+    }
 
     return true;
+
+}
+
+const Reservation* ReservationManager::SearchReservation(int ReservationID) const{
+    Node* current = head;
+
+    while (current!=nullptr){
+        if(current->reservation.GetReservation_ID()!= ReservationID){
+            current=current->next;
+        }
+        else{
+                return &current->reservation;
+        }
+    }
+    return nullptr;
+}
+
+int ReservationManager::CountReservationsforResource(const string& ResourceID) const{
+
+    Node* current=head;
+    int count=0;
+
+    while (current!=nullptr){
+        if(current->reservation.GetResource_ID()== ResourceID){
+            count+=1;
+        }
+        
+        current=current->next;
+    }
+    return count;
+
 }
