@@ -28,7 +28,7 @@ public:
     bool isAvailable() const;
     int getRequestCount() const;
 
-    void recordRequest():
+    void recordRequest();
 
   
     void setResourceID(const std::string& id);

@@ -80,11 +80,11 @@ void displayResourceUtilization(
         }
 
         cout << "| "
-             << reservations.CountReservationsForResource(
+             << reservations.CountReservationsforResource(
                     resource.getResourceID()
                 )
              << "                   | "
-             << waitingList.CountWaitingForResource(
+             << waitingList.countReservationsForResource(
                     resource.getResourceID()
                 )
              << '\n';
@@ -119,7 +119,7 @@ void displayWaitingStatistics(
         }
 
         cout << "| "
-             << waitingList.CountWaitingForResource(
+             << waitingList.countReservationsForResource(
                     resource.getResourceID()
                 )
              << '\n';
@@ -263,17 +263,23 @@ int main() {
 
             Reservation promoted;
 
-            if (waitingList.PromoteFirstForResource(
+            if (waitingList.peekFirstForResource(
                     resourceID, promoted
                 )) {
-                reservationManager.InsertReservation(promoted);
 
-                resourceManager.setResourceAvailability(
-                    resourceID, false
-                );
+                if (reservationManager.InsertReservation(promoted)) {
 
-                cout << "Promoted a waiting reservation for "
-                     << resourceID << ".\n";
+                    waitingList.removeReservationID(
+                        promoted.GetReservation_ID()
+                    );
+
+                    resourceManager.setResourceAvailability(
+                        resourceID, false
+                    );
+
+                    cout << "Promoted a waiting reservation for "
+                         << resourceID << ".\n";
+                }
             }
 
             cout << "Reservation cancelled and saved "
