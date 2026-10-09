@@ -3,15 +3,21 @@
 #include <iomanip>
 
 Resource::Resource()
-    : resourceID(""), name(""), type(""), available(true) {}
+    : resourceID(""), name(""), type(""),
+      available(true), requestCount(0) {
+}
 
-Resource::Resource(const std::string& resourceID,
-                    const std::string& name,
-                    const std::string& type,
-                    bool available)
-    : resourceID(resourceID), name(name), type(type), available(available) {}
+Resource::Resource(const std::string& id,
+                   const std::string& resourceName,
+                   const std::string& resourceType,
+                   bool isAvailable)
+    : resourceID(id),
+      name(resourceName),
+      type(resourceType),
+      available(isAvailable),
+      requestCount(0) {
+}
 
-// ---- Getters ----
 std::string Resource::getResourceID() const {
     return resourceID;
 }
@@ -28,7 +34,14 @@ bool Resource::isAvailable() const {
     return available;
 }
 
-// ---- Setters ----
+int Resource::getRequestCount() const {
+    return requestCount;
+}
+
+void Resource::recordRequest() {
+    ++requestCount;
+}
+
 void Resource::setResourceID(const std::string& id) {
     resourceID = id;
 }
@@ -45,12 +58,11 @@ void Resource::setAvailable(bool status) {
     available = status;
 }
 
-// ---- Display ----
 void Resource::display() const {
     std::cout << std::left
-              << std::setw(8)  << resourceID
+              << std::setw(8) << resourceID
               << std::setw(20) << name
-              << std::setw(20) << type
+              << std::setw(24) << type
               << (available ? "Available" : "Unavailable")
-              << std::endl;
+              << '\n';
 }
