@@ -8,7 +8,7 @@
 
 ResourceManager::ResourceManager() = default;
 
-// Splits a line using the given delimiter.
+// Splits each line from the file into separate values
 static std::vector<std::string> splitLine(
     const std::string& line,
     char delimiter
@@ -24,7 +24,7 @@ static std::vector<std::string> splitLine(
     return tokens;
 }
 
-// Determines which resource should come first.
+// Decides the order of resources by name or request count
 static bool resourceComesBefore(
     const Resource& a,
     const Resource& b,
@@ -42,8 +42,8 @@ static bool resourceComesBefore(
     return a.getResourceID() < b.getResourceID();
 }
 
-// Combines two sorted sections.
-// This is part of our own Merge Sort implementation.
+// Combines two sorted sections into one sorted section
+// This is part of our own Merge Sort implementation
 static void mergeResources(
     std::vector<Resource>& items,
     int left,
@@ -82,7 +82,7 @@ static void mergeResources(
     }
 }
 
-// Recursively divides the list and sorts each section.
+// Uses recursion to divide the resources and sort each part
 static void mergeSortResources(
     std::vector<Resource>& items,
     int left,
@@ -102,7 +102,7 @@ static void mergeSortResources(
     mergeResources(items, left, middle, right, byRequests);
 }
 
-// Loads resources from the text file.
+// Reads resource information from a file and stores it in the vector
 bool ResourceManager::loadFromFile(
     const std::string& filename
 ) {
@@ -150,7 +150,7 @@ bool ResourceManager::loadFromFile(
     return !resources.empty();
 }
 
-// Displays every resource.
+// Displays all resources in the system
 void ResourceManager::displayAll() const {
     if (resources.empty()) {
         std::cout << "No resources loaded.\n";
@@ -170,7 +170,7 @@ void ResourceManager::displayAll() const {
     }
 }
 
-// Displays only available resources.
+// Displays only resources that are currently available
 void ResourceManager::displayAvailable() const {
     bool found = false;
 
@@ -195,9 +195,7 @@ void ResourceManager::displayAvailable() const {
 }
 
 // OUR OWN LINEAR SEARCH.
-//
-// Checks resources one at a time until the requested ID
-// is found. Returns nullptr if no resource matches.
+// Checks each resource ID until it finds a match
 Resource* ResourceManager::findResource(
     const std::string& resourceID
 ) {
@@ -210,7 +208,7 @@ Resource* ResourceManager::findResource(
     return nullptr;
 }
 
-// Updates the availability of a resource.
+// Changes the availability status of a resource
 bool ResourceManager::setResourceAvailability(
     const std::string& resourceID,
     bool available
@@ -234,7 +232,7 @@ ResourceManager::getAllResources() const {
     return resources;
 }
 
-// Increases the request count for a resource.
+// Updates the request count when a resource is requested
 bool ResourceManager::recordRequest(
     const std::string& resourceID
 ) {
@@ -249,7 +247,7 @@ bool ResourceManager::recordRequest(
 }
 
 // OUR OWN MERGE SORT.
-// Sorts resources alphabetically by name.
+// Sorts resources alphabetically by name
 void ResourceManager::sortResourcesByName() {
     if (resources.size() > 1) {
         mergeSortResources(
@@ -261,9 +259,6 @@ void ResourceManager::sortResourcesByName() {
     }
 }
 
-// Displays resources ranked by request count.
-// A separate copy is sorted so the original resource
-// order is not changed by this report.
 void ResourceManager::displayMostRequestedResources() const {
     if (resources.empty()) {
         std::cout << "No resources loaded.\n";
