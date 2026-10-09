@@ -201,7 +201,9 @@ int main() {
                     studentID,
                     resourceID,
                     reservationDate,
-                    resourceManager
+                    resourceManager,
+                    waitingList,
+                    cancellationHistory
                 )) {
                 cout << "Reservation could not be created.\n";
                 break;
