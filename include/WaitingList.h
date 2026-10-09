@@ -1,4 +1,5 @@
-
+//WaitingList class header- samie
+// WaitingList implementation - samie
 #ifndef WAITINGLIST_H
 #define WAITINGLIST_H
 
