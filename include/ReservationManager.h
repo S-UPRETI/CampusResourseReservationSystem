@@ -3,8 +3,8 @@
 #include <string>
 #include "Reservation.h"
 #include "ResourceManager.h"
-#include "WaitingList.cpp"
-#include "CancellationHistory.cpp"
+#include "WaitingList.h"
+#include "CancellationHistory.h"
 
 class ReservationManager{
 private:
