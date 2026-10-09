@@ -2,7 +2,7 @@
 
 A C++ console application for reserving campus resources such as study rooms, laptops, calculators, lab equipment, and tutoring services.
 
-This project was created for **CSCE 2110 - Milestone 1**.
+This project was created for **CSCE 2110**.
 
 ## Team
 
@@ -43,10 +43,11 @@ Then run:
 
 ## Features
 
-* View available campus resources
-* Search for resources
-* Create reservations
-* Cancel reservations
-* Automatically add users to a waiting list when a resource is unavailable
-* Undo the most recent cancellation
-* Track cancellation history
+* View all campus resources and check which ones are available
+* Create, cancel, and display active reservations
+* Search for resources or active reservations by ID using linear search
+* Sort resources alphabetically by name using merge sort
+* Automatically add reservations to a waiting list when a resource is unavailable
+* Promote the next waiting reservation for a resource when its active reservation is cancelled
+* Undo the most recent cancellation and track cancellation history
+* View reports for resource utilization, most requested resources, and waiting-list statistics
