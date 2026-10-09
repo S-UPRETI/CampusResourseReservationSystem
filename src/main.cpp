@@ -2,192 +2,402 @@
 #include "ReservationManager.h"
 #include "WaitingList.h"
 #include "CancellationHistory.h"
+
 #include <iostream>
+#include <limits>
 #include <string>
 
 using namespace std;
-// Asks the user to type some textand keeps asking if they leave it blank
+
+// Reads non-empty text.
 string readText(const string& prompt) {
     string value;
-  while (true) {
-      cout << prompt;
-    getline(cin, value);
-     if (!value.empty()) {
+
+    while (true) {
+        cout << prompt;
+        getline(cin, value);
+
+        if (!value.empty()) {
             return value;
         }
-cout << "This field cannot be empty.\n";
+
+        cout << "This field cannot be empty.\n";
     }
 }
 
-// Asks the user to type a number and keeps asking if they type something wrong
+// Reads an integer and handles invalid input.
 int readInt(const string& prompt) {
-  int value;
- while (true) {
-  cout << prompt;
-     if (cin >> value) {
-      cin.ignore(); // clears leftover Enter key press
-      return value;
+    int value;
+
+    while (true) {
+        cout << prompt;
+
+        if (cin >> value) {
+            cin.ignore(
+                numeric_limits<streamsize>::max(),
+                '\n'
+            );
+
+            return value;
         }
-     cout << "Please enter a valid number.\n";
-      cin.clear();
-     cin.ignore(10000, '\n');
+
+        cout << "Please enter a valid number.\n";
+
+        cin.clear();
+
+        cin.ignore(
+            numeric_limits<streamsize>::max(),
+            '\n'
+        );
     }
 }
 
-int main(){
+// Reports active reservations and waiting students for each resource.
+void displayResourceUtilization(
+    const ResourceManager& resources,
+    const ReservationManager& reservations,
+    const WaitingList& waitingList
+) {
+    cout << "\n=== RESOURCE UTILIZATION ===\n";
 
+    cout << "Resource ID | Resource Name"
+         << "         | Active reservations"
+         << " | Waiting students\n";
+
+    cout << "------------------------------------------------"
+         << "--------------------------\n";
+
+    for (const Resource& resource : resources.getAllResources()) {
+        cout << resource.getResourceID()
+             << "       | "
+             << resource.getName();
+
+        int spaces =
+            22 - static_cast<int>(resource.getName().size());
+
+        for (int i = 0; i < spaces; ++i) {
+            cout << ' ';
+        }
+
+        cout << "| "
+             << reservations.CountReservationsForResource(
+                    resource.getResourceID()
+                )
+             << "                   | "
+             << waitingList.CountWaitingForResource(
+                    resource.getResourceID()
+                )
+             << '\n';
+    }
+
+    cout << "\nActive reservations are counted from "
+         << "the active reservation linked list.\n";
+}
+
+// Reports the number of students waiting for each resource.
+void displayWaitingStatistics(
+    const ResourceManager& resources,
+    const WaitingList& waitingList
+) {
+    cout << "\n=== WAITING-LIST STATISTICS ===\n";
+
+    cout << "Resource ID | Resource Name"
+         << "         | Students waiting\n";
+
+    cout << "-------------------------------------------------------\n";
+
+    for (const Resource& resource : resources.getAllResources()) {
+        cout << resource.getResourceID()
+             << "       | "
+             << resource.getName();
+
+        int spaces =
+            22 - static_cast<int>(resource.getName().size());
+
+        for (int i = 0; i < spaces; ++i) {
+            cout << ' ';
+        }
+
+        cout << "| "
+             << waitingList.CountWaitingForResource(
+                    resource.getResourceID()
+                )
+             << '\n';
+    }
+
+    cout << "Total students waiting: "
+         << waitingList.getCount() << '\n';
+}
+
+int main() {
     CancellationHistory cancellationHistory;
     WaitingList waitingList;
     ResourceManager resourceManager;
     ReservationManager reservationManager;
 
-        
-    if (!resourceManager.loadFromFile("data/resources.txt")){
-        cout<<"Resources could not be loaded"<<endl;
+    // Load resource information from the data file.
+    if (!resourceManager.loadFromFile("data/resources.txt")) {
+        cout << "Resources could not be loaded. "
+             << "Check data/resources.txt.\n";
+
         return 1;
     }
 
-    //menu
+    int choice = 0;
 
-    int choice;
+    do {
+        cout << "\n===== Campus Resource Reservation System =====\n"
+             << "1. Display all resources\n"
+             << "2. Display available resources\n"
+             << "3. Create reservation\n"
+             << "4. Cancel reservation\n"
+             << "5. Display active reservations\n"
+             << "6. Display waiting list\n"
+             << "7. Display cancellation history\n"
+             << "8. Undo last cancellation\n"
+             << "9. Search resource by ID (Linear Search)\n"
+             << "10. Sort resources by name (Merge Sort)\n"
+             << "11. Resource utilization report\n"
+             << "12. Most requested resources report\n"
+             << "13. Waiting-list statistics report\n"
+             << "14. Exit\n";
 
-    do{
+        choice = readInt("Enter your choice: ");
 
-        cout<< "\n===== Campus Resource Reservation System ====="<<endl;
-        cout<<"1. Display all resources"<< endl;
-        cout<<"2. Display available resources"<<endl;
-        cout<<"3. Create reservation"<< endl;
-        cout<<"4. Cancel reservation"<< endl;
-        cout<<"5. Display active reservations"<< endl;
-        cout<<"6. Display waiting list"<< endl;
-        cout<<"7. Display cancellation history"<<endl;
-        cout<<"8. Undo last cancellation"<< endl;
-        cout<<"9. Exit"<< endl;
-        
-        choice=readInt("Enter your choice");
-       
+        switch (choice) {
+        case 1:
+            resourceManager.displayAll();
+            break;
 
-        switch(choice){
+        case 2:
+            resourceManager.displayAvailable();
+            break;
 
-            case 1:// Display all resources
-                resourceManager.displayAll();
-                break;
+        case 3: {
+            int reservationID =
+                readInt("Reservation ID: ");
 
-            case 2://Display available resources
-                resourceManager.displayAvailable();
-                break;
-            
-            case 3://create reservation
-            {
-            int ReservationID;
-            int StudentID;
-            string StudentName;
-            string ResourceID;
-            string ReservationDate;
+            int studentID =
+                readInt("Student ID: ");
 
-            ReservationID= readInt("What is the Reservation ID? ");
-            StudentID= readInt("What is the Student ID? ");
-            StudentName= readText("What is the Student Name? ");
-            ResourceID= readText("What is the Resource ID? ");
-            ReservationDate= readText("What is the Reservation Date? ");
+            string studentName =
+                readText("Student name: ");
 
-            if(!reservationManager.ValidateReservation(ReservationID,StudentName,StudentID,ResourceID,ReservationDate,resourceManager)){
-                cout<<"Invalid Reservation ID or Resource ID"<<endl;
-            }
-            else{
-                Reservation reservation(ReservationID,StudentID,StudentName,ResourceID, ReservationDate);
-                Resource* resource= resourceManager.findResource(ResourceID);
-                if(resource->isAvailable()){
-                    reservationManager.InsertReservation(reservation);
-                    resourceManager.setResourceAvailability(ResourceID,false);
-                }
-                else{       
-                    waitingList.addToWaitlist(reservation);
-                }
+            string resourceID =
+                readText("Resource ID: ");
 
-            }
+            string reservationDate =
+                readText("Reservation date: ");
 
+            if (!resourceManager.findResource(resourceID)) {
+                cout << "Resource ID not found. "
+                     << "Reservation was not created.\n";
                 break;
             }
 
-            case 4://cancel reservation
-        {
-            int ReservationID;
-            Reservation removedReservation;
-
-            ReservationID=readInt("Enter the Reservation ID of the reservation you would like to cancel: ");
-
-            if(!reservationManager.RemoveReservation(ReservationID,removedReservation)){
-                cout<<"Reservation cancellation was unsuccessful, reservation ID does not exist"<<endl;
+            if (!reservationManager.ValidateReservation(
+                    reservationID,
+                    studentName,
+                    studentID,
+                    resourceID,
+                    reservationDate,
+                    resourceManager
+                )) {
+                cout << "Reservation could not be created.\n";
+                break;
             }
-            else{
 
-                cancellationHistory.pushCancellation(removedReservation);
-                resourceManager.setResourceAvailability(removedReservation.GetResource_ID(),true);
+            Reservation reservation(
+                reservationID,
+                studentID,
+                studentName,
+                resourceID,
+                reservationDate
+            );
 
-                if(!waitingList.isEmpty()){
-                    Reservation frontReservation=waitingList.peek();
-                    if (frontReservation.GetResource_ID()==removedReservation.GetResource_ID()){
-                        Reservation boostedReservation=waitingList.removeFromWaitlist();
-                        reservationManager.InsertReservation(boostedReservation);
-                        resourceManager.setResourceAvailability(boostedReservation.GetResource_ID(),false);
-                    }
-                }
+            // Count valid requests, including requests that wait.
+            resourceManager.recordRequest(resourceID);
+
+            Resource* resource =
+                resourceManager.findResource(resourceID);
+
+            if (resource->isAvailable()) {
+                reservationManager.InsertReservation(reservation);
+
+                resourceManager.setResourceAvailability(
+                    resourceID, false
+                );
+
+                cout << "Reservation added to active reservations.\n";
+            } else {
+                waitingList.addToWaitlist(reservation);
+
+                cout << "Resource is unavailable; "
+                     << "reservation added to waiting list.\n";
             }
+
             break;
         }
 
-                
+        case 4: {
+            int reservationID =
+                readInt("Reservation ID to cancel: ");
 
-            case 5://display active reservations
+            Reservation removed;
+
+            if (!reservationManager.RemoveReservation(
+                    reservationID, removed
+                )) {
+                cout << "No active reservation with that ID "
+                     << "was found.\n";
+                break;
+            }
+
+            cancellationHistory.pushCancellation(removed);
+
+            string resourceID = removed.GetResource_ID();
+
+            resourceManager.setResourceAvailability(
+                resourceID, true
+            );
+
+            Reservation promoted;
+
+            if (waitingList.PromoteFirstForResource(
+                    resourceID, promoted
+                )) {
+                reservationManager.InsertReservation(promoted);
+
+                resourceManager.setResourceAvailability(
+                    resourceID, false
+                );
+
+                cout << "Promoted a waiting reservation for "
+                     << resourceID << ".\n";
+            }
+
+            cout << "Reservation cancelled and saved "
+                 << "in cancellation history.\n";
+
+            break;
+        }
+
+        case 5:
             reservationManager.DisplayReservations();
+            break;
+
+        case 6:
+            waitingList.displayWaitlist();
+            break;
+
+        case 7:
+            cancellationHistory.displayHistory();
+            break;
+
+        case 8: {
+            if (cancellationHistory.isEmpty()) {
+                cout << "There are no cancellations to undo.\n";
                 break;
+            }
 
-            case 6://display waiting list
- waitingList.displayWaitlist();
-                break;
+            Reservation restored =
+                cancellationHistory.popAndRestore();
 
-            case 7://display cancellation history
- cancellationHistory.displayHistory();
-                break;
+            Resource* resource =
+                resourceManager.findResource(
+                    restored.GetResource_ID()
+                );
 
-            case 8://undo last cancellation
-{
-    if (cancellationHistory.isEmpty()) {
-        cout << "There is no cancellations to undo." << endl;
-    } else {
-        Reservation restored = cancellationHistory.popAndRestore();
-        Resource* resource = resourceManager.findResource(restored.GetResource_ID());
+            if (resource && resource->isAvailable()) {
+                reservationManager.InsertReservation(restored);
 
-        if (resource != nullptr && resource->isAvailable()) {
+                resourceManager.setResourceAvailability(
+                    restored.GetResource_ID(), false
+                );
 
-        reservationManager.InsertReservation(restored);
-        resourceManager.setResourceAvailability(restored.GetResource_ID(), false);
-        cout << "Restored to active reservations: ";
-            restored.display();
-    } else {
-            waitingList.addToWaitlist(restored);
-            cout << "resource no longer available. Restored reservation placed back in the waiting list: ";
-            restored.display();
-        }
-    }
-     break;
-}
+                cout << "Reservation restored "
+                     << "to active reservations.\n";
+            } else {
+                waitingList.addToWaitlist(restored);
 
-            case 9://exit
-                cout<<"Exiting program..." << endl;
-                break;
+                cout << "Resource is unavailable; restored "
+                     << "reservation placed in waiting list.\n";
+            }
 
-            default:// invalid choice
-             cout << "Invalid choice. Please select 1-9." << endl;
-                break;
-
-
-
+            break;
         }
 
-    } while(choice!=9);
+        case 9: {
+            string resourceID =
+                readText("Enter resource ID to search for: ");
+
+            // Calls our own Linear Search implementation.
+            Resource* result =
+                resourceManager.findResource(resourceID);
+
+            if (result) {
+                cout << "Resource found using Linear Search:\n";
+
+                cout << "ID: "
+                     << result->getResourceID()
+                     << " | Name: "
+                     << result->getName()
+                     << " | Type: "
+                     << result->getType()
+                     << " | Status: "
+                     << (result->isAvailable()
+                             ? "Available"
+                             : "Unavailable")
+                     << " | Requests: "
+                     << result->getRequestCount()
+                     << '\n';
+            } else {
+                cout << "No resource found with ID "
+                     << resourceID << ".\n";
+            }
+
+            break;
+        }
+
+        case 10:
+            // Calls our own Merge Sort implementation.
+            resourceManager.sortResourcesByName();
+
+            cout << "Resources sorted alphabetically "
+                 << "using Merge Sort.\n";
+
+            resourceManager.displayAll();
+            break;
+
+        case 11:
+            displayResourceUtilization(
+                resourceManager,
+                reservationManager,
+                waitingList
+            );
+            break;
+
+        case 12:
+            resourceManager.displayMostRequestedResources();
+            break;
+
+        case 13:
+            displayWaitingStatistics(
+                resourceManager,
+                waitingList
+            );
+            break;
+
+        case 14:
+            cout << "Exiting program...\n";
+            break;
+
+        default:
+            cout << "Invalid choice. Please select 1-14.\n";
+            break;
+        }
+
+    } while (choice != 14);
 
     return 0;
-
 }
