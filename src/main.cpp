@@ -160,7 +160,8 @@ int main() {
              << "11. Resource utilization report\n"
              << "12. Most requested resources report\n"
              << "13. Waiting-list statistics report\n"
-             << "14. Exit\n";
+             << "14. Search active reservations by ID\n"
+             << "15. Exit\n";
 
         choice = readInt("Enter your choice: ");
 
@@ -217,27 +218,31 @@ int main() {
                 reservationDate
             );
 
-            // Count valid requests, including requests that wait.
-            resourceManager.recordRequest(resourceID);
 
             Resource* resource =
                 resourceManager.findResource(resourceID);
 
             if (resource->isAvailable()) {
-                reservationManager.InsertReservation(reservation);
-
-                resourceManager.setResourceAvailability(
+                if (reservationManager.InsertReservation(reservation)){
+                
+                    resourceManager.setResourceAvailability(
                     resourceID, false
                 );
-
                 cout << "Reservation added to active reservations.\n";
+                resourceManager.recordRequest(resourceID);
+
+                } else{
+                    cout<<"Reservation was not created"<<endl;
+                }
+
             } else {
                 waitingList.addToWaitlist(reservation);
-
+                resourceManager.recordRequest(resourceID); // Counts valid requests added to waitlist
+                
                 cout << "Resource is unavailable; "
                      << "reservation added to waiting list.\n";
             }
-
+            
             break;
         }
 
@@ -281,6 +286,9 @@ int main() {
 
                     cout << "Promoted a waiting reservation for "
                          << resourceID << ".\n";
+                } 
+                else{
+                    cout<<"Waiting reservation could not be promoted"<<endl;
                 }
             }
 
@@ -395,17 +403,32 @@ int main() {
                 waitingList
             );
             break;
+        
+        case 14:{
+            int reservationID= readInt("Enter reservation ID to search: ");
 
-        case 14:
+            const Reservation* outcome= reservationManager.SearchReservation(reservationID);
+
+            if (outcome!=nullptr){
+                outcome->display();
+            }
+            else{
+                cout<<"No active reservation matches that ID"<<endl;
+            }
+
+            break;
+        };
+
+        case 15:
             cout << "Exiting program...\n";
             break;
 
         default:
-            cout << "Invalid choice. Please select 1-14.\n";
+            cout << "Invalid choice. Please select 1-15.\n";
             break;
         }
 
-    } while (choice != 14);
+    } while (choice != 15);
 
     return 0;
 }
