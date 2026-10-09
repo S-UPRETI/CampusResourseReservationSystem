@@ -91,8 +91,8 @@ bool ReservationManager::RemoveReservation(int ReservationID, Reservation& Remov
 }
 
 
-bool ReservationManager::ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager) const{
-    if(ReservationExists(ReservationID)){
+bool ReservationManager::ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager,  const WaitingList& waitingList, const CancellationHistory& cancellationHistory ) const{
+    if(ReservationExists(ReservationID)||waitingList.containsReservationID(ReservationID)||cancellationHistory.containsReservationID(ReservationID)){
         cout<<"Reservation ID invalid, reservation already exists"<<endl;
         return false;
     }

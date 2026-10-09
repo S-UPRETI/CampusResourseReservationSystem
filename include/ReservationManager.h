@@ -3,6 +3,8 @@
 #include <string>
 #include "Reservation.h"
 #include "ResourceManager.h"
+#include "WaitingList.cpp"
+#include "CancellationHistory.cpp"
 
 class ReservationManager{
 private:
@@ -30,7 +32,7 @@ public:
 
     bool ReservationExists(int ReservationID) const;
 
-    bool ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager ) const;
+    bool ValidateReservation(int ReservationID, string StudentName, int StudentID, string ResourceID, string ReservationDate, ResourceManager& resourceManager, const WaitingList& waitingList, const CancellationHistory& cancellationHistory ) const;
 
     const Reservation* SearchReservation(int ResrvationID) const;
 
