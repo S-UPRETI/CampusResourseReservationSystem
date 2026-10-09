@@ -1,29 +1,40 @@
 //CancellationHistory header placeholder- samie
+
 #ifndef CANCELLATIONHISTORY_H
 #define CANCELLATIONHISTORY_H
-#include "Reservation.h" //pulls reservation class definatoon as our calss needs to know reservation  is to store
+
+#include <string>
+#include "Reservation.h"
 
 class CancellationHistory {
 private:
-	struct Node {
-		Reservation data;
-		Node* next;
-// to store a reservation and connect it to the next node
-	Node(Reservation r, Node* nextNode) : data(r), next(nextNode) {} 
-	};
-	Node* top;
-	int count;
+    struct Node {
+        Reservation data;
+        Node* next;
+  Node(Reservation r, Node* nextNode)
+            : data(r), next(nextNode) {}
+    };
+
+    Node* top;
+int count;
 
 public:
-	CancellationHistory();
-	~CancellationHistory(); 
-// function for adding restoring checking displaying cancellation 
+    CancellationHistory();
+    ~CancellationHistory();
+
 void pushCancellation(Reservation r);
-
 Reservation popAndRestore();
+ Reservation peek() const;
 
-bool isEmpty() const;
-int getCount() const;
-void displayHistory() const;
+ bool isEmpty() const;
+    int getCount() const;
+  void displayHistory() const;
+
+ // Check whether a reservation ID exists in cancellation history
+    bool containsReservationID(int reservationID) const;
+   // Count cancelled reservations for a particular resource
+    int countReservationsForResource(
+        const std::string& resourceID) const;
 };
+
 #endif

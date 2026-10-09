@@ -1,39 +1,44 @@
 // CancellationHistory implementaion - samie
+
 #include "CancellationHistory.h"
 #include <iostream>
 #include <stdexcept>
 using namespace std;
-//this starts with an empty stack
-CancellationHistory::CancellationHistory() : top(nullptr), count(0) {}
 
-//to delete all the nodes after they are destroyred 
+CancellationHistory::CancellationHistory()
+    : top(nullptr), count(0) {
+}
+
 CancellationHistory::~CancellationHistory() {
     while (top != nullptr) {
         Node* temp = top;
         top = top->next;
         delete temp;
     }
+
+    count = 0;
 }
 
-//add a cancelled reservation to the top of the atacxk 
 void CancellationHistory::pushCancellation(Reservation r) {
-    Node* newNode = new Node(r,top );
-  
+    Node* newNode = new Node(r, top);
+
     top = newNode;
-    ++count;
+    count++;
 }
 
 Reservation CancellationHistory::popAndRestore() {
     if (isEmpty()) {
-        throw std::runtime_error("Cancellation history is empty.");
+        throw runtime_error("Cancellation history is empty.");
     }
 
     Node* temp = top;
-
     Reservation restored = temp->data;
+
     top = top->next;
+
     delete temp;
-    --count;
+    count--;
+
     return restored;
 }
 
@@ -45,13 +50,56 @@ int CancellationHistory::getCount() const {
     return count;
 }
 
-void CancellationHistory::displayHistory() const {
-if (isEmpty()) {
-    cout << "Cancellation history is empty." <<endl;
-    return;
+Reservation CancellationHistory::peek() const {
+    if (isEmpty()) {
+        throw runtime_error("Cancellation history is empty.");
+    }
+
+    return top->data;
 }
-   cout << "--- Cancellation History (most recent first) ---" << endl;
+
+bool CancellationHistory::containsReservationID(int reservationID) const {
+    Node* current = top;
+
+    while (current != nullptr) {
+        if (current->data.GetReservation_ID() == reservationID) {
+            return true;
+        }
+
+        current = current->next;
+    }
+
+    return false;
+}
+
+int CancellationHistory::countReservationsForResource(
+    const string& resourceID) const {
+
+    int resourceCount = 0;
+    Node* current = top;
+
+    while (current != nullptr) {
+        if (current->data.GetResource_ID() == resourceID) {
+            resourceCount++;
+        }
+
+        current = current->next;
+    }
+
+    return resourceCount;
+}
+
+void CancellationHistory::displayHistory() const {
+    if (isEmpty()) {
+        cout << "Cancellation history is empty." << endl;
+        return;
+    }
+
+    cout << "--- Cancellation History (most recent first) ---"
+         << endl;
+
     const Node* current = top;
+
     while (current != nullptr) {
         current->data.display();
         current = current->next;
