@@ -2,11 +2,13 @@
 #include <iostream>
 #include <iomanip>
 
+// Sets default values when a resource is created without details
 Resource::Resource()
     : resourceID(""), name(""), type(""),
       available(true), requestCount(0) {
 }
 
+// Creates a resource with the given ID, name, type, and availability
 Resource::Resource(const std::string& id,
                    const std::string& resourceName,
                    const std::string& resourceType,
@@ -38,6 +40,7 @@ int Resource::getRequestCount() const {
     return requestCount;
 }
 
+// Increases the number of times this resource is requested
 void Resource::recordRequest() {
     ++requestCount;
 }
@@ -58,6 +61,7 @@ void Resource::setAvailable(bool status) {
     available = status;
 }
 
+// Displays the resource details in aligned columns
 void Resource::display() const {
     std::cout << std::left
               << std::setw(8) << resourceID
